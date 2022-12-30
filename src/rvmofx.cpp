@@ -479,10 +479,13 @@ effectEndInstanceChanged(
 {
 	InstanceData *priv = getInstanceData(effect);
 
-	/* Update enabled params */
-	updateParamsValidity(effect);
+	/* If it's a user edit : Update enabled params */
+	char *changeReason;
+	gPropHost->propGetString(inArgs, kOfxPropChangeReason, 0, &changeReason);
+	if (!strcmp(changeReason, kOfxChangeUserEdited))
+		updateParamsValidity(effect);
 
-	/* Update cached param values */
+	/* Update cached param values int all cases */
 	gParamHost->paramGetValue(priv->downsampleRatioParam, &priv->downsampleRatio);
 	gParamHost->paramGetValue(priv->outputTypeParam, &priv->outputType);
 	gParamHost->paramGetValue(priv->colorSourceParam, &priv->colorSource);
