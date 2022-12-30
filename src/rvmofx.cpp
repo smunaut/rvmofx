@@ -197,11 +197,6 @@ getModelFilename(OfxImageEffectHandle effect)
 	gParamHost->paramGetValue(priv->modelPrecisionParam, &model_precision);
 	gParamHost->paramGetValue(priv->modelFileParam, &model_file);
 
-	if (!model_file || !model_file[0])
-		return NULL;
-
-	model_file = strdup(model_file);
-
 	/* Build path */
 	switch (model) {
 	case MODEL_MOBILENETV3:
@@ -219,12 +214,12 @@ getModelFilename(OfxImageEffectHandle effect)
 		break;
 
 	case MODEL_CUSTOM:
+		if (!model_file || !model_file[0])
+			return NULL;
+
 		snprintf(path, PATH_MAX, "%s", model_file);
 		break;
 	}
-
-	/* Release copied strings */
-	free(model_file);
 
 	return path;
 }
